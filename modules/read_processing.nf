@@ -5,6 +5,8 @@
  */
 process quality_control {
 	tag {query.simpleName}
+	publishDir "${params.output_dir}/statistics/qc-preprocessing", mode: 'copy', pattern: "*"
+
 	
 	input:
 	path query
@@ -24,6 +26,8 @@ process quality_control {
  */
 process quality_control_2 {
 	tag {query.simpleName}
+	publishDir "${params.output_dir}/statistics/qc-postprocessing", mode: 'copy', pattern: "*"
+
 	
 	input:
 	path query
@@ -46,6 +50,8 @@ process quality_control_2 {
  */
 process adapter_removal {
 	tag {query.simpleName}
+		publishDir "${params.output_dir}/statistics", mode: 'copy', pattern: "${query}_trimming_report.txt"
+
 
 	input:
 	path query
