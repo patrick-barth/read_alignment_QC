@@ -20,7 +20,7 @@ process collect_metadata {
 }
 
 process get_md5sum {
-    publishDir "${params.outputDir}/metadata", mode: 'copy', pattern: "md5sums.txt"
+    publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "md5sums.txt"
 
     input:
     path(query)
