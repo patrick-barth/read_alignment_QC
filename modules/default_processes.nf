@@ -1,4 +1,4 @@
-process final{
+process final {
 	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "pipeline_metadata.txt"
 
     output:
