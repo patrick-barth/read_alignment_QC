@@ -20,20 +20,19 @@ include{
  */
 
 if ( params.help ) {
-    help = """your_script.nf: A description of your script and maybe some examples of how
-             |                to run the script
-             |Required arguments:
-             |  --reads         Location of the input file file (FASTQ).
-             |
-             |Optional arguments:
-             |  --min_length    Minimum length for reads after adapter trimming.
-             |                  [default: ${params.min_length}]
-             |  --min_qual      Minimum base quality.
-             |                  [default: ${params.min_qual}]
-             |  --min_percent_qual_filter   Minimum percentage of bases within a read that need to be above the quality threshold
-             |                              [default: ${params.min_percent_qual_filter}]
-             |  -w              The NextFlow work directory. Delete the directory once the process
-             |                  is finished [default: ${workDir}]""".stripMargin()
+    help = """main.nf: Collects processing data from preprocessing steps (adapter trimming and quality filtering) as well as from alignment steps and returns them. Provides an overview of the general quality of the data.
+                |Required arguments:
+            --reads         Location of the input file file (FASTQ).
+                |
+                |Optional arguments:
+                |  --min_length    Minimum length for reads after adapter trimming.
+                |                  [default: ${params.min_length}]
+                |  --min_qual      Minimum base quality.
+                |                  [default: ${params.min_qual}]
+                |  --min_percent_qual_filter   Minimum percentage of bases within a read that need to be above the quality threshold
+                |                              [default: ${params.min_percent_qual_filter}]
+                |  -w              The NextFlow work directory. Delete the directory once the process
+                |                  is finished [default: ${workDir}]""".stripMargin()
     // Print the help with the stripped margin and exit
     println(help)
     exit(0)
@@ -55,16 +54,16 @@ annotation = file(params.annotation)
  * Welcome log to be displayed before workflow
  */
 log.info """\
-         ${params.manifest.name} v${params.manifest.version}
-         ==========================
-         input reads  : ${params.reads}
-         output to    : ${params.output_dir}
-         --
-         run as       : ${workflow.commandLine}
-         started at   : ${workflow.start}
-         config files : ${workflow.configFiles}
-         """
-         .stripIndent()
+        ${params.manifest.name} v${params.manifest.version}
+        ==========================
+        input reads  : ${params.reads}
+        output to    : ${params.output_dir}
+        --
+        run as       : ${workflow.commandLine}
+        started at   : ${workflow.start}
+        config files : ${workflow.configFiles}
+        """
+        .stripIndent()
 
 
 /*
