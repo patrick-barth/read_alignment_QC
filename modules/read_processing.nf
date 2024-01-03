@@ -33,7 +33,7 @@ process quality_control_2 {
 	path query
 
 	output:
-	path "quality-control-2*"
+	path "${query.simpleName}_2.fastqc.{html,zip}"
 
 	"""
 	cat ${query} > ${query.simpleName}_2.fastq
