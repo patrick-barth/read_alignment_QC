@@ -4,8 +4,11 @@ nextflow.enable.dsl=2
 
 //import processes for 
 include{
-
-} from './modules/< name module to import processes from >'
+    quality_control
+    quality_control_2
+    adapter_removal
+    quality_filter
+} from './modules/read_processing.nf'
 
 //essential input files
 input_reads     = Channel.fromPath( params.reads )			//FASTQ file(s) containing reads
@@ -15,7 +18,14 @@ if(params.annotation != 'NO_FILE'){
 }
 annotation = file(params.annotation)
 
-//preparation for workflow
+/*
+ * preparation for workflow
+ */
+
+// Output directories
+metadata_out = params.output + "/metadata"
+preprocessed_files_out = params.output + "/preprocessed_reads"
+alignments_out = params.output + "/alignments"
 
 /*
  * Welcome log to be displayed before workflow
@@ -23,7 +33,7 @@ annotation = file(params.annotation)
 log.info """\
          ${params.manifest.name} v${params.manifest.version}
          ==========================
-         input from   : ${params.input_file}
+         input reads  : ${params.reads}
          output to    : ${params.output_dir}
          --
          run as       : ${workflow.commandLine}
@@ -57,21 +67,24 @@ workflow preprocessing {
 }
 
 /*
- * 
+ * output min_length min_qual min_percent_qual_filter 
  */
 
 if ( params.help ) {
     help = """your_script.nf: A description of your script and maybe some examples of how
              |                to run the script
              |Required arguments:
-             |  --input_file  Location of the input file file.
-             |                [default: ${params.input_file}]
+             |  --reads         Location of the input file file (FASTQ).
              |
              |Optional arguments:
-             |  --use_thing   Do some optional process.
-             |                [default: ${params.use_thing}]
-             |  -w            The NextFlow work directory. Delete the directory once the process
-             |                is finished [default: ${workDir}]""".stripMargin()
+             |  --min_length    Minimum length for reads after adapter trimming.
+             |                  [default: ${params.min_length}]
+             |  --min_qual      Minimum base quality.
+             |                  [default: ${params.min_qual}]
+             |  --min_percent_qual_filter   Minimum percentage of bases within a read that need to be above the quality threshold
+             |                              [default: ${params.min_percent_qual_filter}]
+             |  -w              The NextFlow work directory. Delete the directory once the process
+             |                  is finished [default: ${workDir}]""".stripMargin()
     // Print the help with the stripped margin and exit
     println(help)
     exit(0)
@@ -81,7 +94,10 @@ if ( params.help ) {
  * Actual workflow connecting subworkflows
  */
 workflow {
-    preprocessing(input_reads)
+    quality_control(input_reads)
+    adapter_removal(input_reads)
+    quality_filter(adapter_removal.out.fastq_trimmed)
+    quality_control_2(quality_filter.out.fastq_quality_filtered)
 }
 
 
