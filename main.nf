@@ -1,5 +1,7 @@
 #!/usr/bin/env nextflow
 
+import groovy.json.JsonOutput // used for parameter output 
+
 nextflow.enable.dsl=2
 
 //import processes for 
@@ -11,7 +13,6 @@ include{
 } from './modules/read_processing.nf'
 
 include{
-    saveParams
     collect_metadata
 } from './modules/default_processes.nf'
 
@@ -80,7 +81,6 @@ workflow {
     quality_control_2(quality_filter.out.fastq_quality_filtered)
 
     // Collect metadata
-    saveParams()
     collect_metadata()
 }
 
@@ -89,6 +89,10 @@ workflow {
  * Prints complection status to command line
  */
 workflow.onComplete{
+    // Create JSON file with all parameters -> will be saved in metadata output
+    jsonStr = JsonOutput.toJson(params)
+	file("${params.output_dir}/metadata/params.json").text = JsonOutput.prettyPrint(jsonStr)
+
 	println "Pipeline completed at: $workflow.complete"
 	println "Execution status: ${ workflow.success ? 'OK' : 'failed' }"
 }

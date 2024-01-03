@@ -18,15 +18,3 @@ process collect_metadata {
     Repository revision: ${workflow.revision}
     """
 }
-
-import groovy.json.JsonOutput
-
-process saveParams {
-	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "params.json"
-
-    output:
-    path 'params.json'
-
-    script:
-    "echo '${JsonOutput.toJson(params)}' > params.json"
-}
