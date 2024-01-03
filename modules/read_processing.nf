@@ -69,8 +69,8 @@ process adapter_removal {
  */
 process quality_filter {
 	tag {query.simpleName}
-	publishDir "${params.output}/statistics", mode: 'copy', pattern: "summary-quality-filter.txt"
-	publishDir "${params.output}/preprocessed-reads", mode: 'copy', pattern: "${query.baseName}.qual-filter.fastq"
+	publishDir "${params.output_dir}/statistics", mode: 'copy', pattern: "summary-quality-filter.txt"
+	publishDir "${params.output_dir}/preprocessed-reads", mode: 'copy', pattern: "${query.baseName}.qual-filter.fastq"
 
 	input:
 	path query
