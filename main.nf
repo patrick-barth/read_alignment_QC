@@ -12,6 +12,7 @@ include{
 
 include{
     saveParams
+    collect_metadata
 } from './modules/default_processes.nf'
 
 /*
@@ -81,6 +82,7 @@ workflow {
 
     // Collect metadata
     saveParams()
+    collect_metadata()
 }
 
 
