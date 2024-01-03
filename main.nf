@@ -52,6 +52,9 @@ annotation = file(params.annotation)
  * preparation for workflow
  */
 
+// Collect all input files
+input_files = input_reads.concat(annotation)
+
 /*
  * Welcome log to be displayed before workflow
  */
@@ -83,7 +86,7 @@ workflow {
 
     // Collect metadata
     collect_metadata()
-    get_md5sum(input_reads.concat(annotation))
+    get_md5sum(input_files)
 }
 
 
