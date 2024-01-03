@@ -22,11 +22,6 @@ annotation = file(params.annotation)
  * preparation for workflow
  */
 
-// Output directories
-metadata_out = params.output + "/metadata"
-preprocessed_files_out = params.output + "/preprocessed_reads"
-alignments_out = params.output + "/alignments"
-
 /*
  * Welcome log to be displayed before workflow
  */
