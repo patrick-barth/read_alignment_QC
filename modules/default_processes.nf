@@ -1,10 +1,12 @@
 process final{
+	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "pipeline_metadata.txt"
+
     output:
-    path("metadata.txt")
+    path("pipeline_metadata.txt")
 
     script:
     """
-    cat <<EOF > metadata.txt
+    cat <<EOF > pipeline_metadata.txt
     Author: ${params.manifest.author}
     Pipeline version: ${params.manifest.version}
     Working directory: ${workflow.workDir}
@@ -15,4 +17,16 @@ process final{
     Git repository: ${workflow.repository}
     Repository revision: ${workflow.revision}
     """
+}
+
+import groovy.json.JsonOutput
+
+process saveParams {
+	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "params.json"
+
+    output:
+    path 'params.json'
+
+    script:
+    "echo '${JsonOutput.toJson(params)}' > params.json"
 }
