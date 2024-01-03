@@ -10,6 +10,30 @@ include{
     quality_filter
 } from './modules/read_processing.nf'
 
+/*
+ * Prints help and exits workflow afterwards when parameter --help is set to true
+ */
+
+if ( params.help ) {
+    help = """your_script.nf: A description of your script and maybe some examples of how
+             |                to run the script
+             |Required arguments:
+             |  --reads         Location of the input file file (FASTQ).
+             |
+             |Optional arguments:
+             |  --min_length    Minimum length for reads after adapter trimming.
+             |                  [default: ${params.min_length}]
+             |  --min_qual      Minimum base quality.
+             |                  [default: ${params.min_qual}]
+             |  --min_percent_qual_filter   Minimum percentage of bases within a read that need to be above the quality threshold
+             |                              [default: ${params.min_percent_qual_filter}]
+             |  -w              The NextFlow work directory. Delete the directory once the process
+             |                  is finished [default: ${workDir}]""".stripMargin()
+    // Print the help with the stripped margin and exit
+    println(help)
+    exit(0)
+}
+
 //essential input files
 input_reads     = Channel.fromPath( params.reads )			//FASTQ file(s) containing reads
 //non essential input files
@@ -61,29 +85,7 @@ workflow preprocessing {
         fastq_reads_quality_filtered                = quality_filter.out.fastq_quality_filtered
 }
 
-/*
- * output min_length min_qual min_percent_qual_filter 
- */
 
-if ( params.help ) {
-    help = """your_script.nf: A description of your script and maybe some examples of how
-             |                to run the script
-             |Required arguments:
-             |  --reads         Location of the input file file (FASTQ).
-             |
-             |Optional arguments:
-             |  --min_length    Minimum length for reads after adapter trimming.
-             |                  [default: ${params.min_length}]
-             |  --min_qual      Minimum base quality.
-             |                  [default: ${params.min_qual}]
-             |  --min_percent_qual_filter   Minimum percentage of bases within a read that need to be above the quality threshold
-             |                              [default: ${params.min_percent_qual_filter}]
-             |  -w              The NextFlow work directory. Delete the directory once the process
-             |                  is finished [default: ${workDir}]""".stripMargin()
-    // Print the help with the stripped margin and exit
-    println(help)
-    exit(0)
-}
 
 /*
  * Actual workflow connecting subworkflows
