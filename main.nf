@@ -65,27 +65,6 @@ log.info """\
 /*
  * Starting subworkflow descriptions
  */
-workflow preprocessing {
-    take: 
-        input_reads
-    main:
-        quality_control(input_reads)
-        adapter_removal(input_reads)
-        quality_filter(adapter_removal.out.fastq_trimmed)
-        quality_control_2(quality_filter.out.fastq_quality_filtered)
-
-    emit:
-        //data for multiqc
-        multiqc_quality_control                     = quality_control.out
-        multiqc_quality_control_post_preprocessing  = quality_control_2.out
-        multiqc_adapter_removal                     = adapter_removal.out.report_trimming
-        multiqc_quality_filter                      = quality_filter.out.report_quality_filter
-
-        // data for downstream processes
-        fastq_reads_quality_filtered                = quality_filter.out.fastq_quality_filtered
-}
-
-
 
 /*
  * Actual workflow connecting subworkflows
