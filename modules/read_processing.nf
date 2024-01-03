@@ -5,7 +5,7 @@
  */
 process quality_control {
 	tag {query.simpleName}
-	publishDir "${params.output_dir}/statistics/qc-preprocessing", mode: 'copy', pattern: "${query}.fastqc.*"
+	publishDir "${params.output_dir}/statistics/qc-preprocessing", mode: 'copy', pattern: "${query}_fastqc.{html,zip}"
 
 	
 	input:
@@ -26,14 +26,14 @@ process quality_control {
  */
 process quality_control_2 {
 	tag {query.simpleName}
-	publishDir "${params.output_dir}/statistics/qc-postprocessing", mode: 'copy', pattern: "${query.simpleName}_2.fastqc.*"
+	publishDir "${params.output_dir}/statistics/qc-postprocessing", mode: 'copy', pattern: "${query.simpleName}_2_fastqc.{html,zip}"
 
 	
 	input:
 	path query
 
 	output:
-	path "${query.simpleName}_2.fastqc.*"
+	path "${query.simpleName}_2_fastqc.{html,zip}"
 
 	"""
 	cat ${query} > ${query.simpleName}_2.fastq
