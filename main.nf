@@ -12,7 +12,7 @@ include{
 
 include{
     saveParams
-} from"./modules/default_processes.nf
+} from './modules/default_processes.nf'
 
 /*
  * Prints help and exits workflow afterwards when parameter --help is set to true
