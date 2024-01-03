@@ -70,6 +70,7 @@ process adapter_removal {
 process quality_filter {
 	tag {query.simpleName}
 	publishDir "${params.output}/statistics", mode: 'copy', pattern: "summary-quality-filter.txt"
+	publishDir preprocessed_files_out, mode: 'copy', pattern: "${query.baseName}.qual-filter.fastq"
 
 	input:
 	path query
