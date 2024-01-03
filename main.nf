@@ -74,6 +74,9 @@ workflow {
     adapter_removal(input_reads)
     quality_filter(adapter_removal.out.fastq_trimmed)
     quality_control_2(quality_filter.out.fastq_quality_filtered)
+
+    // Collect metadata
+    saveParams()
 }
 
 
