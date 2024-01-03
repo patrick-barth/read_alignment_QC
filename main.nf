@@ -14,6 +14,7 @@ include{
 
 include{
     collect_metadata
+    get_md5sum
 } from './modules/default_processes.nf'
 
 /*
@@ -82,6 +83,7 @@ workflow {
 
     // Collect metadata
     collect_metadata()
+    get_md5sum(input_reads.concat(annotation))
 }
 
 

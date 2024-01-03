@@ -18,3 +18,23 @@ process collect_metadata {
     Repository revision: ${workflow.revision}
     """
 }
+
+process get_md5sum {
+    publishDir "${params.outputDir}/metadata", mode: 'copy', pattern: "md5sums.txt"
+
+    input:
+    path(query)
+
+    output:
+    path("md5sums.txt")
+
+    script:
+    """
+    for i in ${query}
+	do
+		if test -f \$i; then
+			md5sum \$i >> md5sums.txt
+		fi
+	done
+    """
+}
