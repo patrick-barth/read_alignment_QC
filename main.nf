@@ -53,7 +53,9 @@ annotation = file(params.annotation)
  */
 
 // Collect all input files
-input_files = input_reads.concat(annotation)
+input_files = input_reads.concat(Channel.of(annotation))
+                    .flatten().toList()
+
 
 /*
  * Welcome log to be displayed before workflow
