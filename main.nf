@@ -95,7 +95,7 @@ workflow {
                         .concat(quality_control.out.version)
                         .concat(quality_control_2.out.version)
                         .concat(adapter_removal.out.version)
-                        .concat(quality_filter)
+                        .concat(quality_filter.out.version)
                         .unique()
                         .flatten().toList()
                     )
