@@ -94,6 +94,8 @@ workflow {
                         .concat(get_md5sum.out.version)
                         .concat(quality_control.out.version)
                         .concat(quality_control_2.out.version)
+                        .concat(adapter_removal.out.version)
+                        .concat(quality_filter)
                         .unique()
                         .flatten().toList()
                     )
