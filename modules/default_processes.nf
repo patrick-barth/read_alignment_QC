@@ -3,8 +3,7 @@ process collect_metadata {
 
     output:
     path("pipeline_metadata.txt"), emit: metadata_output
-    //tuple val('collect_metadata'), val('cat'), cmd("cat --version | head -1 | rev | cut -f 1 -d' ' | rev"), emit: version
-    tuple val('collect_metadata'), val('cat'), env(VERSION), emit: version
+    path('version.txt'), emit: version
 
     script:
     """
@@ -20,7 +19,7 @@ process collect_metadata {
     Repository revision: ${workflow.revision}
     EOF
 
-    VERSION=\$(cat --version | head -1 | rev | cut -f 1 -d' ' | rev)
+    echo -e "${process}\tcat\t\$(cat --version | head -1 | rev | cut -f 1 -d' ' | rev)" > version.txt
     """
 }
 
@@ -32,7 +31,7 @@ process get_md5sum {
 
     output:
     path("md5sums.txt"), emit: metadata_output
-    tuple val('collect_metadata'), val('cat'), env(VERSION), emit: version
+    path('version.txt'), emit: version
 
     script:
     """
@@ -43,7 +42,7 @@ process get_md5sum {
 		fi
 	done
 
-    VERSION=\$(md5sum --version | head -1 | rev | cut -f 1 -d' ' | rev)
+    echo -e "${process}\tmd5sum\t\$(md5sum --version | head -1 | rev | cut -f 1 -d' ' | rev)" > version.txt
     """
 }
 
@@ -51,7 +50,7 @@ process collect_versions {
     publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "tool_versions.txt"
 
     input:
-    tuple val(process), val(tool), val(version)
+    path(query)
 
     output:
     path('tool_versions.txt')
@@ -61,7 +60,7 @@ process collect_versions {
     echo -e "Process\ttool\tversion" > tool_versions.txt
     for i in ${query}
 	do
-		echo -e "${process}\t${tool}\t${version}" >> tool_versions.txt
+		cat \$i >> tool_versions.txt
 	done
     """
 }
