@@ -3,7 +3,7 @@ process collect_metadata {
 
     output:
     path("pipeline_metadata.txt"), emit: metadata_output
-    path('${task.process}.version.txt'), emit: version
+    path("${task.process}.version.txt"), emit: version
 
     script:
     """
@@ -31,7 +31,7 @@ process get_md5sum {
 
     output:
     path("md5sums.txt"), emit: metadata_output
-    path('${task.process}.version.txt'), emit: version
+    path("${task.process}.version.txt"), emit: version
 
     script:
     """
