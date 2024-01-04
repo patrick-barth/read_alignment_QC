@@ -2,8 +2,9 @@ process collect_metadata {
 	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "pipeline_metadata.txt"
 
     output:
-    path("pipeline_metadata.txt")
-    tuple val('collect_metadata'), val('cat'), cmd("cat --version | head -1 | rev | cut -f 1 -d' ' | rev")
+    path("pipeline_metadata.txt"), emit: metadata_output
+    //tuple val('collect_metadata'), val('cat'), cmd("cat --version | head -1 | rev | cut -f 1 -d' ' | rev"), emit: version
+    tuple val('collect_metadata'), val('cat'), env(VERSION), emit: version
 
     script:
     """
@@ -18,7 +19,7 @@ process collect_metadata {
     Git repository: ${workflow.repository}
     Repository revision: ${workflow.revision}
 
-    cat --version | head -1 | rev | cut -f 1 -d' ' | rev
+    VERSION=\$(cat --version | head -1 | rev | cut -f 1 -d' ' | rev)
     """
 }
 
