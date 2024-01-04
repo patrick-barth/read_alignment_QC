@@ -15,6 +15,7 @@ include{
 include{
     collect_metadata
     get_md5sum
+    collect_versions
 } from './modules/default_processes.nf'
 
 /*
