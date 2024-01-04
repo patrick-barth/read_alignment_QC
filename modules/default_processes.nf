@@ -3,6 +3,7 @@ process collect_metadata {
 
     output:
     path("pipeline_metadata.txt")
+    tuple val('collect_metadata'), val('cat'), cmd("cat --version | head -1 | rev | cut -f 1 -d' ' | rev")
 
     script:
     """
@@ -16,6 +17,8 @@ process collect_metadata {
     Containers used: ${workflow.container}
     Git repository: ${workflow.repository}
     Repository revision: ${workflow.revision}
+
+    cat --version | head -1 | rev | cut -f 1 -d' ' | rev
     """
 }
 
@@ -35,6 +38,25 @@ process get_md5sum {
 		if test -f \$i; then
 			md5sum \$i >> md5sums.txt
 		fi
+	done
+    """
+}
+
+process collect_versions {
+    publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "tool_versions.txt"
+
+    input:
+    tuple val(process), val(tool), val(version)
+
+    output:
+    path('tool_versions.txt')
+
+    script:
+    """
+    echo -e "Process\ttool\tversion" > tool_versions.txt
+    for i in ${query}
+	do
+		echo -e "${process}\t${tool}\t${version}" >> tool_versions.txt
 	done
     """
 }
