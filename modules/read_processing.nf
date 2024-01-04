@@ -12,10 +12,13 @@ process quality_control {
 	path query
 
 	output:
-	path "${query.baseName}*"
+	path "${query.baseName}*", emit: output
+	path("${task.process}.version.txt"), emit: version
 
 	"""
 	fastqc ${query} -o .
+
+	echo -e "${task.process}\tFastQC\t\$(fastqc --version | rev | cut -f 1 -d' ' | rev)" > ${task.process}.version.txt
 	"""
 }
 
@@ -33,11 +36,14 @@ process quality_control_2 {
 	path query
 
 	output:
-	path "${query.simpleName}_2_fastqc.{html,zip}"
+	path "${query.simpleName}_2_fastqc.{html,zip}", emit: output
+	path("${task.process}.version.txt"), emit: version
 
 	"""
 	cat ${query} > ${query.simpleName}_2.fastq
 	fastqc ${query.simpleName}_2.fastq -o .
+
+	echo -e "${task.process}\tFastQC\t\$(fastqc --version | rev | cut -f 1 -d' ' | rev)" > ${task.process}.version.txt
 	"""
 }
 

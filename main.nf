@@ -92,6 +92,8 @@ workflow {
     get_md5sum(input_files)
     collect_versions(collect_metadata.out.version
                         .concat(get_md5sum.out.version)
+                        .concat(quality_control)
+                        .concat(quality_control_2)
                         .unique()
                         .flatten().toList()
                     )
