@@ -19,7 +19,7 @@ process collect_metadata {
     Repository revision: ${workflow.revision}
     EOF
 
-    echo -e "${process}\tcat\t\$(cat --version | head -1 | rev | cut -f 1 -d' ' | rev)" > version.txt
+    echo -e "${task.process}\tcat\t\$(cat --version | head -1 | rev | cut -f 1 -d' ' | rev)" > ${task.process}.version.txt
     """
 }
 
@@ -42,7 +42,7 @@ process get_md5sum {
 		fi
 	done
 
-    echo -e "${process}\tmd5sum\t\$(md5sum --version | head -1 | rev | cut -f 1 -d' ' | rev)" > version.txt
+    echo -e "${task.process}\tmd5sum\t\$(md5sum --version | head -1 | rev | cut -f 1 -d' ' | rev)" > ${task.process}.version.txt
     """
 }
 
