@@ -64,7 +64,7 @@ process adapter_removal {
 
 	output:
 	path "${query}_trimmed.fq", emit: fastq_trimmed 
-	path "${query}_trimming_report.txt", emit: report_trimming
+	path "${query}_trimming_report.txt", emit: report
 	tuple path("${task.process}.version.txt"), path("${task.process}.version2.txt"), emit: version
 
 	"""
@@ -93,7 +93,7 @@ process quality_filter {
 
 	output:
 	path "${query.baseName}.qual-filter.fastq", emit: fastq_quality_filtered 
-	path 'summary-quality-filter.txt', emit: report_quality_filter
+	path 'summary-quality-filter.txt', emit: report
 	path("${task.process}.version.txt"), emit: version
 
 
