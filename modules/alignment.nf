@@ -31,7 +31,7 @@ process build_index_bowtie {
  */
 process mapping_bowtie{
 	tag {query.simpleName}
-	publishDir "${params.output_dir}/alignments", mode: 'copy', pattern: "${query.baseName}.bam"
+	publishDir "${params.output_dir}/alignments", mode: 'copy', pattern: "${query.simpleName}.bam"
 	publishDir "${params.output_dir}/statistics", mode: 'copy', pattern: "${query.simpleName}.statistics.txt"
 
 	input:
@@ -39,26 +39,26 @@ process mapping_bowtie{
 	path(query)
 
 	output:
-	path "${query.baseName}.bam", emit: bam_alignments
+	path "${query.simpleName}.bam", emit: bam_alignments
 	path "${query.simpleName}.statistics.txt", emit: report
 	path("${task.process}.version.txt"), emit: version
 
 	script:
 	if(params.report_all_alignments)
 		"""
-		bowtie2 --no-unal -q -a -p ${task.cpus} --seed 0 -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.baseName}.bam
+		bowtie2 --no-unal -q -a -p ${task.cpus} --seed 0 -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.simpleName}.bam
 
 		echo -e "${task.process}\tbowtie2\t\$(bowtie2 --version | head -1 | rev | cut -f1 -d' ' | rev)" > ${task.process}.version.txt
 		"""
     else if(params.max_alignments)
         """
-        bowtie2 --no-unal -q -p ${task.cpus} --seed 0 -k ${params.max_alignments} -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.baseName}.bam
+        bowtie2 --no-unal -q -p ${task.cpus} --seed 0 -k ${params.max_alignments} -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.simpleName}.bam
 
 		echo -e "${task.process}\tbowtie2\t\$(bowtie2 --version | head -1 | rev | cut -f1 -d' ' | rev)" > ${task.process}.version.txt
         """
 	else
 		"""
-		bowtie2 --no-unal -q -p ${task.cpus} --seed 0 -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.baseName}.bam
+		bowtie2 --no-unal -q -p ${task.cpus} --seed 0 -U ${query} -x ${ref} 2> ${query.simpleName}.statistics.txt | samtools view -bS - > ${query.simpleName}.bam
 
 		echo -e "${task.process}\tbowtie2\t\$(bowtie2 --version | head -1 | rev | cut -f1 -d' ' | rev)" > ${task.process}.version.txt
 		"""
