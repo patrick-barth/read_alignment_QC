@@ -12,10 +12,17 @@ include{
     quality_filter
 } from './modules/read_processing.nf'
 
-include{
-    build_index_bowtie
-    mapping_bowtie
-} from './modules/alignment.nf'
+if (params.aligner == "bowtie2"){
+    include{
+        build_index_bowtie
+        mapping_bowtie
+    } from './modules/alignment.nf'
+} else if (params.aligner == "star"){
+    include{
+        build_index_STAR
+        mapping_STAR
+    } from './modules/alignment.nf'
+}
 
 include{
     collect_metadata
@@ -112,10 +119,18 @@ workflow alignment {
 
             alignments_tmp          =   mapping_bowtie.out.bam_alignments
             version_index_tmp       =   build_index_bowtie.out.version
-            version_align_tmp   =   mapping_bowtie.out.version
+            version_align_tmp       =   mapping_bowtie.out.version
             report_tmp              =   mapping_bowtie.out.report
         } else if (params.aligner == "star"){
-            //TODO: STAR logic
+            build_index_STAR(reference,
+                            annotation)
+            mapping_STAR(reads
+                        .combine(build_index_STAR.out.index))
+
+            alignments_tmp          =   mapping_STAR.out.bam_alignments
+            version_index_tmp       =   build_index_STAR.out.version
+            version_align_tmp       =   mapping_STAR.out.version
+            report_tmp              =   mapping_STAR.out.report
         } 
 
     emit:

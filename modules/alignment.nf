@@ -77,24 +77,30 @@ process build_index_STAR {
 	path(gtf)
 
 	output:
-	path(index)
+	path(index), emit: index
+	path("${task.process}.version.txt"), emit: version
+
 
 	script:
 	if(params.annotation == 'NO_FILE')
 		"""
 		mkdir index
-		STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ./index --genomeFastaFiles ${referenceGenome} 
+		STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ./index --genomeFastaFiles ${referenceGenome}
+		
+		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
+
 		"""
 	else
 		"""
 		mkdir index
 		STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ./index --genomeFastaFiles ${referenceGenome} --sjdbGTFfile ${gtf}
+
+		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
 		"""
 }
 
 /*
  * Alignes reads to reference via STAR. Reference needs to be index before.
- * Suppresses clipping at 5' end (--alignEndsType Extend5pOfRead1)
  * Output is provided as BAM file that is sorted by coordinates
  * Input: Tuple of [FASTQ] Read files to be aligned and [DIR] Directory containing the STAR index
   * Params:  params.report_all_alignments    -> Reports all possible alignments and dismisses params.max_alignments
@@ -104,6 +110,8 @@ process build_index_STAR {
  */
 process mapping_STAR{
 	tag {query.simpleName}
+	publishDir "${params.output_dir}/alignments", mode: 'copy', pattern: "${query.baseName}.Aligned.sortedByCoord.out.bam"
+	publishDir "${params.output_dir}/statistics", mode: 'copy', pattern: "${query.baseName}.Log.*"
 
 	input:
 	tuple path(query), path(indexDir)
@@ -111,18 +119,25 @@ process mapping_STAR{
 	output:
 	path("${query.baseName}.Aligned.sortedByCoord.out.bam"), emit: bam_alignments
 	path("${query.baseName}.Log.*"), emit: report
+	path("${task.process}.version.txt"), emit: version
 
 	script:
 	if(params.report_all_alignments)
 		"""
 		STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax -1 --outSAMtype BAM SortedByCoordinate
+
+		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
 		"""
     else if(params.max_alignments)
         """
         STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax ${params.max_alignments} --outSAMtype BAM SortedByCoordinate
+
+		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
         """
 	else
 		"""
 		STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax ${params.max_alignments} --outSAMtype BAM SortedByCoordinate
+
+		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
 		"""
 }
