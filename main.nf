@@ -27,6 +27,7 @@ if (params.aligner == "bowtie2"){
 include{
     collect_metadata
     get_md5sum
+    multiqc
     collect_versions
 } from './modules/default_processes.nf'
 
@@ -156,6 +157,12 @@ workflow {
             quality_filter.out.fastq_quality_filtered
     )
 
+    multiqc(adapter_removal.out.report,
+            quality_filter.out.report,
+            quality_control.out.output,
+            quality_control.out.output,
+            alignemnts.out.reports)
+
     // Collect metadata
     collect_metadata()
     get_md5sum(input_files)
@@ -167,6 +174,7 @@ workflow {
                         .concat(quality_filter.out.version)
                         .concat(alignment.out.version_index)
                         .concat(alignment.out.version_align)
+                        .concat(multiqc.out.version)
                         .unique()
                         .flatten().toList()
                     )

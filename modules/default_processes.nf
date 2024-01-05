@@ -46,6 +46,29 @@ process get_md5sum {
     """
 }
 
+process multiqc{
+	publishDir "${params.output}/statistics", mode: 'copy'
+
+	input:
+	path(adapter)
+	path(qual)
+	path(qc1)
+	path(qc2)
+	path(mapping)
+
+	output:
+	path("multiqc_*"), emit: output
+    path("${task.process}.version.txt"), emit: version
+    
+    script:
+	"""
+	multiqc .
+
+    
+    echo -e "${task.process}\tmultiqc\t\$(multiqc --version |  cut -f3 -d' ')" > ${task.process}.version.txt
+	"""
+}
+
 process collect_versions {
     publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "tool_versions.txt"
 
