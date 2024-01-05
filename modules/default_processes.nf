@@ -2,8 +2,8 @@ process collect_metadata {
 	publishDir "${params.output_dir}/metadata", mode: 'copy', pattern: "pipeline_metadata.txt"
 
     output:
-    path("pipeline_metadata.txt"), emit: metadata_output
-    path("${task.process}.version.txt"), emit: version
+    path("pipeline_metadata.txt"),          emit: metadata_output
+    path("${task.process}.version.txt"),    emit: version
 
     script:
     """
@@ -30,8 +30,8 @@ process get_md5sum {
     path(query)
 
     output:
-    path("md5sums.txt"), emit: metadata_output
-    path("${task.process}.version.txt"), emit: version
+    path("md5sums.txt"),                    emit: metadata_output
+    path("${task.process}.version.txt"),    emit: version
 
     script:
     """
@@ -57,8 +57,8 @@ process multiqc{
 	path(mapping)
 
 	output:
-	path("multiqc_*"), emit: output
-    path("${task.process}.version.txt"), emit: version
+	path("multiqc_*"),                      emit: output
+    path("${task.process}.version.txt"),    emit: version
     
     script:
 	"""

@@ -10,7 +10,7 @@ process build_index_bowtie {
 
 	output:
 	tuple path("${ref}"), path("${ref}.*"), emit: index
-	path("${task.process}.version.txt"), emit: version
+	path("${task.process}.version.txt"), 	emit: version
 
 	"""
 	bowtie2-build ${ref} ${ref}
@@ -39,9 +39,9 @@ process mapping_bowtie{
 	path(query)
 
 	output:
-	path "${query.simpleName}.bam", emit: bam_alignments
-	path "${query.simpleName}.statistics.txt", emit: report
-	path("${task.process}.version.txt"), emit: version
+	path "${query.simpleName}.bam", 			emit: bam_alignments
+	path "${query.simpleName}.statistics.txt", 	emit: report
+	path("${task.process}.version.txt"), 		emit: version
 
 	script:
 	if(params.report_all_alignments)
@@ -77,8 +77,8 @@ process build_index_STAR {
 	path(gtf)
 
 	output:
-	path(index), emit: index
-	path("${task.process}.version.txt"), emit: version
+	path(index), 							emit: index
+	path("${task.process}.version.txt"), 	emit: version
 
 
 	script:
@@ -117,9 +117,9 @@ process mapping_STAR{
 	tuple path(query), path(indexDir)
 
 	output:
-	path("${query.baseName}.Aligned.sortedByCoord.out.bam"), emit: bam_alignments
-	path("${query.baseName}.Log.*"), emit: report
-	path("${task.process}.version.txt"), emit: version
+	path("${query.baseName}.Aligned.sortedByCoord.out.bam"), 	emit: bam_alignments
+	path("${query.baseName}.Log.*"), 							emit: report
+	path("${task.process}.version.txt"), 						emit: version
 
 	script:
 	if(params.report_all_alignments)

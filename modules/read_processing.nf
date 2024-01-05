@@ -12,8 +12,8 @@ process quality_control {
 	path query
 
 	output:
-	path "${query.baseName}*", emit: output
-	path("${task.process}.version.txt"), emit: version
+	path "${query.baseName}*", 				emit: output
+	path("${task.process}.version.txt"), 	emit: version
 
 	"""
 	fastqc ${query} -o .
@@ -37,7 +37,7 @@ process quality_control_2 {
 
 	output:
 	path "${query.simpleName}_2_fastqc.{html,zip}", emit: output
-	path("${task.process}.version.txt"), emit: version
+	path("${task.process}.version.txt"), 			emit: version
 
 	"""
 	cat ${query} > ${query.simpleName}_2.fastq
@@ -63,9 +63,9 @@ process adapter_removal {
 	path query
 
 	output:
-	path "${query}_trimmed.fq", emit: fastq_trimmed 
-	path "${query}_trimming_report.txt", emit: report
-	tuple path("${task.process}.version.txt"), path("${task.process}.version2.txt"), emit: version
+	path "${query}_trimmed.fq", 														emit: fastq_trimmed 
+	path "${query}_trimming_report.txt", 												emit: report
+	tuple path("${task.process}.version.txt"), path("${task.process}.version2.txt"), 	emit: version
 
 	"""
 	trim_galore --cores ${task.cpus} --basename ${query} -o . --length ${params.min_length} ${query} --quality 0
@@ -93,8 +93,8 @@ process quality_filter {
 
 	output:
 	path "${query.baseName}.qual-filter.fastq", emit: fastq_quality_filtered 
-	path 'summary-quality-filter.txt', emit: report
-	path("${task.process}.version.txt"), emit: version
+	path 'summary-quality-filter.txt', 			emit: report
+	path("${task.process}.version.txt"), 		emit: version
 
 
 	"""
