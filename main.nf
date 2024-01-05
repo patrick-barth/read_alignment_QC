@@ -43,6 +43,11 @@ if ( params.help ) {
                 |   --min_percent_qual_filter   Minimum percentage of bases within a read that need to
                 |                               be above the quality threshold
                 |                               [default: ${params.min_percent_qual_filter}]
+                |   --report_all_alignments If stated all possible alignments are calculated
+                |                           [default: ${params.report_all_alignments}]
+                |   --max_alignments    States the maximum number of alignments per read.
+                |                       Is overwritten by --report_all_alignments.
+                |                       [default: Default number used by the aligner]
                 |   -w              The NextFlow work directory. Delete the directory once the process
                 |                   is finished [default: ${workDir}]""".stripMargin()
     // Print the help with the stripped margin and exit
@@ -75,12 +80,16 @@ input_files = input_reads.concat(Channel.of(annotation))
 log.info """\
         ${params.manifest.name} v${params.manifest.version}
         ==========================
-        input reads  : ${params.reads}
-        output to    : ${params.output_dir}
+        input reads         : ${params.reads}
+        input reference     : ${params.reference}
+        input annotation    : ${params.annotation}
+        output to           : ${params.output_dir}
         --
-        run as       : ${workflow.commandLine}
-        started at   : ${workflow.start}
-        config files : ${workflow.configFiles}
+        Aligner             : ${params.aligner}
+        --
+        run as              : ${workflow.commandLine}
+        started at          : ${workflow.start}
+        config files        : ${workflow.configFiles}
         """
         .stripIndent()
 
