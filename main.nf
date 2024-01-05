@@ -161,7 +161,7 @@ workflow {
             quality_filter.out.report,
             quality_control.out.output,
             quality_control.out.output,
-            alignemnts.out.reports)
+            alignment.out.reports)
 
     // Collect metadata
     collect_metadata()
