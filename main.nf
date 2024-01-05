@@ -160,7 +160,7 @@ workflow {
     multiqc(adapter_removal.out.report,
             quality_filter.out.report,
             quality_control.out.output,
-            quality_control.out.output,
+            quality_control_2.out.output,
             alignment.out.reports)
 
     // Collect metadata
