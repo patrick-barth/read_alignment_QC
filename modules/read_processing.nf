@@ -5,14 +5,14 @@
  */
 process quality_control {
 	tag {query.simpleName}
-	publishDir "${params.output_dir}/statistics/qc-preprocessing", mode: 'copy', pattern: "${query}_fastqc.{html,zip}"
+	publishDir "${params.output_dir}/statistics/qc-preprocessing", mode: 'copy', pattern: "${query.baseName}_fastqc.{html,zip}"
 
 	
 	input:
 	path query
 
 	output:
-	path "${query.baseName}*", 				emit: output
+	path "${query.baseName}_fastqc.{html,zip}", 				emit: output
 	path("${task.process}.version.txt"), 	emit: version
 
 	"""
