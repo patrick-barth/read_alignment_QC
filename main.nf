@@ -103,7 +103,7 @@ workflow alignment {
 
             alignments_tmp          =   mapping_bowtie.out.bam_alignments
             version_index_tmp       =   build_index_bowtie.out.version
-            version_alignment_tmp   =   mapping_bowtie.out.version
+            version_align_tmp   =   mapping_bowtie.out.version
             report_tmp              =   mapping_bowtie.out.report
         } else if (params.aligner == "star"){
             //TODO: STAR logic
