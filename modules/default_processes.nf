@@ -47,7 +47,7 @@ process get_md5sum {
 }
 
 process multiqc{
-	publishDir "${params.output}/statistics", mode: 'copy'
+	publishDir "${params.output_dir}/statistics", mode: 'copy'
 
 	input:
 	path(adapter)
