@@ -85,21 +85,18 @@ process build_index_STAR {
 
 
 	script:
-	if(params.annotation == 'NO_FILE')
-		"""
-		mkdir index
-		STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ./index --genomeFastaFiles ${referenceGenome}
-		
-		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
+	annotation_file = !params.annotation == 'NO_FILE' ? '--sjdbGTFfile ' + ${gtf} : ''
 
-		"""
-	else
-		"""
-		mkdir index
-		STAR --runThreadN ${task.cpus} --runMode genomeGenerate --genomeDir ./index --genomeFastaFiles ${referenceGenome} --sjdbGTFfile ${gtf}
-
-		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
-		"""
+	"""
+	mkdir index
+	STAR --runThreadN ${task.cpus} \
+		--runMode genomeGenerate \
+		--genomeDir ./index \
+		--genomeFastaFiles ${referenceGenome} \
+		${annotation_file}
+	
+	echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
+	"""
 }
 
 /*
