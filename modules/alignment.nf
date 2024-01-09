@@ -125,22 +125,18 @@ process mapping_STAR{
 	path("${task.process}.version.txt"), 						emit: version
 
 	script:
-	if(params.report_all_alignments)
-		"""
-		STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax -1 --outSAMtype BAM SortedByCoordinate
+	def all_alignments = params.report_all_alignments ? '--outSAMmultNmax -1' : ''
+	def some_alignments = params.max_alignments && !params.report_all_alignments ? "--outSAMmulNmax " + max_alignments : ''
 
-		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
-		"""
-    else if(params.max_alignments)
-        """
-        STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax ${params.max_alignments} --outSAMtype BAM SortedByCoordinate
+	"""
+	STAR --runThreadN ${task.cpus} \
+		--genomeDir ${indexDir} \
+		--readFilesIn ${query} \
+		--outFileNamePrefix ${query.baseName}. \
+		${all_alignments} \
+		${some_alignments} \
+		--outSAMtype BAM SortedByCoordinate
 
-		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
-        """
-	else
-		"""
-		STAR --runThreadN ${task.cpus} --genomeDir ${indexDir} --readFilesIn ${query} --outFileNamePrefix ${query.baseName}. --outSAMmultNmax ${params.max_alignments} --outSAMtype BAM SortedByCoordinate
-
-		echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
-		"""
+	echo -e "${task.process}\tSTAR\t\$(STAR --version)" > ${task.process}.version.txt
+	"""
 }
