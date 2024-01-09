@@ -126,7 +126,7 @@ process mapping_STAR{
 
 	script:
 	def all_alignments = params.report_all_alignments ? '--outSAMmultNmax -1' : ''
-	def some_alignments = params.max_alignments && !params.report_all_alignments ? "--outSAMmulNmax " + params.max_alignments : ''
+	def some_alignments = params.max_alignments && !params.report_all_alignments ? "--outSAMmultNmax " + params.max_alignments : ''
 
 	"""
 	STAR --runThreadN ${task.cpus} \
